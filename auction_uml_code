@@ -1,0 +1,117 @@
+@startuml
+skinparam dpi 300
+skinparam pageSize A4 portrait
+
+' Define Actors
+left to right direction
+actor Guest as G
+actor "Authenticated User" as User
+actor Admin as A
+
+' Define System Boundary
+rectangle "Auction House API" as System {
+
+  ' Use Cases for Guest
+  (View List of Auctions) as VLA
+  (Search for Items) as SI
+  (View Item Details) as VID
+
+  ' Use Cases for Authenticated User
+  (Register/Login) as RL
+  (Place a Bid) as PB
+  (Set Maximum Bid Limit) as SMBL
+  (Add Item for Auction) as AIFA
+  (View Own Bids) as VOB
+  (Receive Alerts) as RA
+
+  ' Use Cases for Admin
+  (Manage Categories) as MC
+  (Manage Items) as MI
+  (Manage Auctions) as MA
+  (Manage Users) as MU
+
+  ' Relationships for Guest
+  G --> VLA
+  G --> SI
+  G --> VID
+
+  ' Relationships for Authenticated User
+  User --> RL
+  User --> PB
+  User --> SMBL
+  User --> AIFA
+  User --> VOB
+  User --> RA
+
+  ' Relationships for Admin
+  A --> MC
+  A --> MI
+  A --> MA
+  A --> MU
+
+  ' Include Relationships
+  PB .> RL : <<include>>
+  AIFA .> RL : <<include>>
+  SMBL .> PB : <<include>>
+
+  ' Extend Relationships
+  RA .> VLA : <<extend>>
+}
+
+' Add Notes for Clarity
+note bottom of VLA
+  Guests and authenticated users
+  can view all ongoing auctions.
+end note
+
+note bottom of SI
+  Users can filter items by:
+  - Category (e.g., electronics, art)
+  - Condition (new/used)
+  - Keywords
+end note
+
+note bottom of PB
+  Authenticated users can place bids.
+  The system ensures the bid is higher
+  than the current highest bid.
+end note
+
+note bottom of SMBL
+  Users can set a maximum bid limit.
+  The system will automatically bid
+  on their behalf up to the limit.
+end note
+
+note bottom of AIFA
+  Authenticated users can add items
+  by providing details like title,
+  description, category, and condition.
+end note
+
+note bottom of RA
+  Users receive notifications for
+  new auctions or items in categories
+  they are interested in.
+end note
+
+note bottom of MC
+  Admins can manage categories
+  (e.g., add "Electronics" or "Art").
+end note
+
+note bottom of MI
+  Admins can add, edit, or delete
+  items in the auction.
+end note
+
+note bottom of MA
+  Admins can start or end auctions
+  manually.
+end note
+
+note bottom of MU
+  Admins can view or block users
+  to maintain system integrity.
+end note
+@enduml
