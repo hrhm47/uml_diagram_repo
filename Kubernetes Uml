@@ -1,0 +1,36 @@
+@startuml
+
+' Figure 1: Kubernetes Cluster & Monitoring
+
+skinparam dpi 300
+
+package "Kubernetes Cluster" {
+    package "Monitoring" {
+        [Prometheus (Monitoring)] --> [Grafana (Visualization)]: Queries Metrics
+    }
+    
+    package "Orchestration" {
+        [Horizontal Pod Autoscaler (HPA)] --> [CRUD Service]: Scales Based on CPU Usage
+    }
+    
+    package "Chaos Engineering" {
+        [Chaos Mesh (Fault Tolerance)] --> [Prometheus (Monitoring)]: Simulates Failures
+        [Chaos Mesh (Fault Tolerance)] --> [Kafka Consumer]: Simulates Failures
+        [Chaos Mesh (Fault Tolerance)] --> [CRUD Service]: Simulates Failures
+    }
+}
+
+note right of [Chaos Mesh (Fault Tolerance)]
+Chaos Mesh simulates:
+- Pod Crashes
+- Network Partitions
+- Resource Contention
+end note
+
+note right of [HPA]
+HPA dynamically scales:
+- CRUD Service based on CPU usage
+- Can use custom metrics (e.g., Kafka lag)
+end note
+
+@enduml
