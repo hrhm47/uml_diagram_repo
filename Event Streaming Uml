@@ -1,0 +1,39 @@
+@startuml
+
+' Figure 2: Event Streaming & External Clients
+
+skinparam dpi 300
+
+package "Event Streaming Platform" {
+    [Kafka] --> [Kafka Consumer]: Subscribes to Topics
+    [Kafka] --> [MongoDB]: Stores Events
+    [Kafka] --> [CRUD Service]: Publishes Events
+    [Kafka] --> [gRPC Service]: Publishes Events
+    
+    package "Cluster Coordination" {
+        [Zookeeper] --> [Kafka]: Coordinates Cluster
+    }
+}
+
+[External REST Clients] --> [CRUD Service]: HTTP Requests
+[gRPC Clients] --> [gRPC Service]: gRPC Communication
+
+note right of [Kafka]
+Kafka Fault Tolerance:
+- Topic Replication
+- Zookeeper Coordination
+- Leader Election
+end note
+
+note right of [MongoDB]
+MongoDB Replica Set ensures:
+- Data Replication
+- High Availability
+- Automatic Failover
+end note
+
+' Connection point to Figure 1
+[CRUD Service] ..> [Prometheus (Monitoring)] : Connects to Figure 1
+[gRPC Service] ..> [Prometheus (Monitoring)] : Connects to Figure 1
+
+@enduml
